@@ -23,22 +23,30 @@ let raqueteX = canvas.width - larguraDaRaquete
 let direitaPressionada = false
 let esquerdaPressionada = false
 
-let x = canvas.width / 2
-let y = canvas.height - 30
+// tamanho da largura da tela
+let x = canvas.width / 5
+//tamanho da altura da tela
+let y = canvas.height - 60
+// velocidade largura
 let dx = 2
+// velocidade altura
 let dy = -2
 
 let pontos = 0
 let vidas = 3
-
+let ganhou = 0
 const blocos: Bloco[][] = []
 
-for (let c = 0; c < contagemDeBlocosEmColuna; c++) {
-  blocos[c] = []
-  for (let l = 0; l < contagemDeBlocosEmLinha; l++) {
-    blocos[c][l] = {x: 0, y: 0, estado: 1}
+function defineestado(){
+  for (let c = 0; c < contagemDeBlocosEmColuna; c++) {
+    blocos[c] = []
+    for (let l = 0; l < contagemDeBlocosEmLinha; l++) {
+      blocos[c][l] = {x: 0, y: 0, estado: 1}
+    }
   }
 }
+
+defineestado()
 
 document.onkeydown = (e) => {
   if (e.code === 'ArrowRight') {
@@ -76,10 +84,10 @@ function detectaColisao() {
           dy = -dy
           bloco.estado = 0
           pontos++
-
-          if (pontos == contagemDeBlocosEmLinha * contagemDeBlocosEmColuna) {
-            alert('Você ganhou, parabéns')
-          }
+        
+            if (pontos == contagemDeBlocosEmLinha * contagemDeBlocosEmColuna) {
+              redesenha()
+            }
         }
       }
     }
@@ -167,8 +175,8 @@ function desenha() {
       } else {
         x = canvas.width / 2
         y = canvas.height - 30
-        dx = 2
-        dy = -2
+        // dx = 2
+        // dy = -2
         raqueteX = (canvas.width - larguraDaRaquete) / 2
       }
     }
@@ -185,6 +193,18 @@ function desenha() {
   requestAnimationFrame(desenha)
 }
 
+function redesenha(){
+  alert('Você ganhou, parabéns')
+  pontos = 0
+  vidas = 3
+  defineestado()
+  x = canvas.width / 2
+  y = canvas.height - 30
+  dx = dx * 2;
+  dy = dy * 2 - 2;
+  desenhaBlocos()
+  console.log(dx, dy)
+}
 document.body.appendChild(canvas)
 
 desenha()
