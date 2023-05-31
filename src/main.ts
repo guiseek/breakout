@@ -157,7 +157,10 @@ function desenha() {
   if (y + dy < raioDaBola) {
     dy = -dy
   } else if (y + dy > canvas.height - alturaDaRaquete - raioDaBola) {
-    if (x > raqueteX && x < raqueteX + larguraDaRaquete) {
+    if (
+      x + raioDaBola / 2 > raqueteX &&
+      x - raioDaBola / 2 < raqueteX + larguraDaRaquete
+    ) {
       dy = -dy
     } else {
       vidas--
