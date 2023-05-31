@@ -30,7 +30,7 @@ let dx = 2
 let dy = -2
 
 let pontos = 0
-let vidas = 3
+let vidas = 10
 
 const blocos: Bloco[][] = []
 
@@ -47,19 +47,8 @@ function posiçãoInicialBolinha() {
   x = canvas.width / 2
   y = canvas.height - 30
 
-  if (pontos <= contagemDeBlocosEmLinha * contagemDeBlocosEmColuna) {
-    dx = 2
-    dy = -2
-  }
-
-  if (pontos >= contagemDeBlocosEmLinha * contagemDeBlocosEmColuna) {
-    dx = 3
-    dy = -3
-  }
-  if (pontos >= contagemDeBlocosEmLinha * contagemDeBlocosEmColuna * 2) {
-    dx = 4
-    dy = -4
-  }
+  dx = 2 * nivel
+  dy = -2 * nivel
 
   raqueteX = (canvas.width - larguraDaRaquete) / 2
 }
@@ -103,28 +92,14 @@ function detectaColisao() {
           bloco.estado = 0
           pontos++
 
-          if (pontos == contagemDeBlocosEmLinha * contagemDeBlocosEmColuna) {
-            alert('Você completou o primeiro nível, parabéns')
-            posiçãoInicialBolinha()
-            criaBlocos()
-            nivel = 2
-          }
-
           if (
             pontos ==
-            contagemDeBlocosEmLinha * contagemDeBlocosEmColuna * 2
+            contagemDeBlocosEmLinha * contagemDeBlocosEmColuna * nivel
           ) {
-            alert('Você completou o segundo nível, parabéns')
+            alert(`Você completou o ${nivel} nível, parabéns`)
+            nivel++
             posiçãoInicialBolinha()
             criaBlocos()
-            nivel = 3
-          }
-
-          if (
-            pontos ==
-            contagemDeBlocosEmLinha * contagemDeBlocosEmColuna * 3
-          ) {
-            alert('Você completou o terceiro nível, parabéns')
           }
         }
       }
