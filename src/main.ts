@@ -68,10 +68,10 @@ function detectaColisao() {
 
       if (bloco.estado === 1) {
         if (
-          x > bloco.x &&
-          x < bloco.x + larguraDoBloco &&
-          y > bloco.y &&
-          y < bloco.y + alturaDoBloco + alturaDoBloco / 2
+          x + raioDaBola > bloco.x &&
+          x - raioDaBola < bloco.x + larguraDoBloco &&
+          y + raioDaBola > bloco.y &&
+          y - raioDaBola < bloco.y + alturaDoBloco
         ) {
           dy = -dy
           bloco.estado = 0
