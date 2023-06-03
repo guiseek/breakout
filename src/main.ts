@@ -13,6 +13,7 @@ const alturaDoBloco = 20
 const enchimentoDoBloco = 10
 const parteSuperiorDoBloco = 60
 const lateralEsquerdaDoBloco = 10
+let nivel = 1
 
 canvas.width =
   (larguraDoBloco + enchimentoDoBloco) * contagemDeBlocosEmLinha +
@@ -29,16 +30,30 @@ let dx = 2
 let dy = -2
 
 let pontos = 0
-let vidas = 3
+let vidas = 10
 
 const blocos: Bloco[][] = []
 
-for (let c = 0; c < contagemDeBlocosEmColuna; c++) {
-  blocos[c] = []
-  for (let l = 0; l < contagemDeBlocosEmLinha; l++) {
-    blocos[c][l] = {x: 0, y: 0, estado: 1}
+function criaBlocos() {
+  for (let c = 0; c < contagemDeBlocosEmColuna; c++) {
+    blocos[c] = []
+    for (let l = 0; l < contagemDeBlocosEmLinha; l++) {
+      blocos[c][l] = {x: 0, y: 0, estado: 1}
+    }
   }
 }
+
+function posiçãoInicialBolinha() {
+  x = canvas.width / 2
+  y = canvas.height - 30
+
+  dx = 2 * nivel
+  dy = -2 * nivel
+
+  raqueteX = (canvas.width - larguraDaRaquete) / 2
+}
+
+criaBlocos()
 
 document.onkeydown = (e) => {
   if (e.code === 'ArrowRight') {
@@ -68,17 +83,23 @@ function detectaColisao() {
 
       if (bloco.estado === 1) {
         if (
-          x > bloco.x &&
-          x < bloco.x + larguraDoBloco &&
-          y > bloco.y &&
-          y < bloco.y + alturaDoBloco + alturaDoBloco / 2
+          x + raioDaBola > bloco.x &&
+          x - raioDaBola < bloco.x + larguraDoBloco &&
+          y + raioDaBola > bloco.y &&
+          y - raioDaBola < bloco.y + alturaDoBloco
         ) {
           dy = -dy
           bloco.estado = 0
           pontos++
 
-          if (pontos == contagemDeBlocosEmLinha * contagemDeBlocosEmColuna) {
-            alert('Você ganhou, parabéns')
+          if (
+            pontos ==
+            contagemDeBlocosEmLinha * contagemDeBlocosEmColuna * nivel
+          ) {
+            alert(`Você completou o ${nivel} nível, parabéns`)
+            nivel++
+            posiçãoInicialBolinha()
+            criaBlocos()
           }
         }
       }
@@ -119,6 +140,12 @@ function desenhaVidas() {
   context.fillText(`Vidas: ${vidas}`, canvas.width - 100, 30)
 }
 
+function desenhaNivel() {
+  context.font = '24px Arial'
+  context.fillStyle = 'lime'
+  context.fillText(`Nível: ${nivel}`, canvas.width / 2 - 30, 30)
+}
+
 function desenhaBlocos() {
   for (let c = 0; c < contagemDeBlocosEmColuna; c++) {
     for (let r = 0; r < contagemDeBlocosEmLinha; r++) {
@@ -149,6 +176,7 @@ function desenha() {
   desenhaRaquete()
   desenhaPontos()
   desenhaVidas()
+  desenhaNivel()
   detectaColisao()
 
   if (x + dx > canvas.width - raioDaBola || x + dx < raioDaBola) {
@@ -157,7 +185,10 @@ function desenha() {
   if (y + dy < raioDaBola) {
     dy = -dy
   } else if (y + dy > canvas.height - alturaDaRaquete - raioDaBola) {
-    if (x > raqueteX && x < raqueteX + larguraDaRaquete) {
+    if (
+      x + raioDaBola / 2 > raqueteX &&
+      x - raioDaBola / 2 < raqueteX + larguraDaRaquete
+    ) {
       dy = -dy
     } else {
       vidas--
@@ -165,11 +196,7 @@ function desenha() {
         alert('Fim de jogo')
         document.location.reload()
       } else {
-        x = canvas.width / 2
-        y = canvas.height - 30
-        dx = 2
-        dy = -2
-        raqueteX = (canvas.width - larguraDaRaquete) / 2
+        posiçãoInicialBolinha()
       }
     }
   }
